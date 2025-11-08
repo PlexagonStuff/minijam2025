@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddqiqyjp2sp2q"]
+
+[ext_resource type="Script" path="res://Building.gd" id="1_pv2i8"]
+
+[node name="Building" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_pv2i8")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 7
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+
+[node name="HitFlash" type="Polygon2D" parent="."]
+visible = false
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

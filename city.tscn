@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://baq6hqy5mwg4g"]
+
+[ext_resource type="Script" path="res://City.gd" id="1_t4oib"]
+[ext_resource type="Script" path="res://Camera2D.gd" id="2_3j7g6"]
+[ext_resource type="PackedScene" uid="uid://dex7ws46baffn" path="res://player.tscn" id="3_15e6i"]
+[ext_resource type="FontFile" uid="uid://b6baptikk3syf" path="res://SmallTownKaijiu/Pangolin-Regular.ttf" id="3_x5ouf"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xxq18"]
+
+[node name="City" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_t4oib")
+
+[node name="CityBoundaries" type="Polygon2D" parent="."]
+position = Vector2(-14, 404)
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(-53, -217, 731, -499, 1333, -50, 1216, 213, 551, 961, -7, 421)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3, 3)
+script = ExtResource("2_3j7g6")
+noise = SubResource("FastNoiseLite_xxq18")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="Score" type="Label" parent="Camera2D/CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("3_x5ouf")
+theme_override_font_sizes/font_size = 72
+text = "Score: "
+
+[node name="Player" parent="." instance=ExtResource("3_15e6i")]
+z_index = 1
+y_sort_enabled = true
+collision_mask = 3

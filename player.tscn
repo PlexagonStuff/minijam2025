@@ -1,0 +1,99 @@
+[gd_scene load_steps=10 format=3 uid="uid://dex7ws46baffn"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_jj4qr"]
+[ext_resource type="Texture2D" uid="uid://dpknwhqr2dfnd" path="res://SmallTownKaijiu/angrykaiju.png" id="2_k38l6"]
+[ext_resource type="Texture2D" uid="uid://cy42narximvxs" path="res://SmallTownKaijiu/kaiju.png" id="3_bfmw8"]
+[ext_resource type="Texture2D" uid="uid://5smjdeu57o14" path="res://SmallTownKaijiu/energybeam.png" id="4_scrly"]
+[ext_resource type="Texture2D" uid="uid://63sqkervrbd7" path="res://EmptyBar.png" id="5_hsrb7"]
+[ext_resource type="Texture2D" uid="uid://dhpifmvcbp10a" path="res://FullBar.png" id="6_nib7o"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3c7s0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_k38l6")
+}],
+"loop": true,
+"name": &"Angry",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_bfmw8")
+}],
+"loop": true,
+"name": &"Normal",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lwyda"]
+radius = 120.0
+height = 480.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f0u2i"]
+size = Vector2(620, 110)
+
+[node name="Player" type="CharacterBody2D"]
+scale = Vector2(0.05, 0.05)
+script = ExtResource("1_jj4qr")
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(40, 40)
+sprite_frames = SubResource("SpriteFrames_3c7s0")
+animation = &"Normal"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 20)
+scale = Vector2(1, 1)
+shape = SubResource("CapsuleShape2D_lwyda")
+
+[node name="rotationPoint" type="Node2D" parent="."]
+position = Vector2(160, 40)
+scale = Vector2(1, 1)
+
+[node name="Laser" type="Area2D" parent="rotationPoint"]
+modulate = Color(1, 1, 1, 0.52549)
+position = Vector2(340, -120)
+collision_layer = 4
+collision_mask = 2
+
+[node name="Energybeam" type="Sprite2D" parent="rotationPoint/Laser"]
+position = Vector2(0.00012207, -3.8147e-06)
+scale = Vector2(0.5, 1)
+texture = ExtResource("4_scrly")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="rotationPoint/Laser"]
+position = Vector2(-9.99988, -9.53674e-06)
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_f0u2i")
+
+[node name="Slash" type="Area2D" parent="rotationPoint"]
+position = Vector2(-60, -40)
+scale = Vector2(1, 1)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="rotationPoint/Slash"]
+scale = Vector2(1, 1)
+polygon = PackedVector2Array(350, -110, 370, -90, 390, -60, 390, -20, 380, 30, 360, 70, 340, 120, 380, 130, 430, 60, 450, 10, 470, -40, 420, -120, 370, -140, 340, -130, 360, -110)
+
+[node name="Polygon2D" type="Polygon2D" parent="rotationPoint"]
+position = Vector2(-60, -40)
+polygon = PackedVector2Array(350, -110, 370, -90, 390, -60, 390, -20, 380, 30, 360, 70, 340, 120, 380, 130, 430, 60, 450, 10, 470, -40, 420, -120, 370, -140, 340, -130, 360, -110)
+
+[node name="PewPewLaser" type="TextureProgressBar" parent="."]
+offset_left = -260.0
+offset_top = -400.0
+offset_right = 1090.0
+offset_bottom = 219.0
+scale = Vector2(0.3, 0.3)
+value = 30.0
+texture_under = ExtResource("5_hsrb7")
+texture_progress = ExtResource("6_nib7o")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="area_entered" from="rotationPoint/Slash" to="." method="_on_slash_area_entered"]
+[connection signal="value_changed" from="PewPewLaser" to="." method="_on_pew_pew_laser_value_changed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
